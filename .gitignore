@@ -1,0 +1,56 @@
+# Build
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+TestResults/
+*.pdb
+*.mdb
+*.opendb
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.cache
+
+# Project user-specific
+*.csproj.user
+
+# WPF generated (están en obj/ de todas formas)
+*.g.cs
+*.g.i.cs
+*Designer.cs
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+packages.lock.json
+
+# JetBrains / Rider
+.idea/
+*.iml
+
+# Coverage / profiling
+*.coverage
+*.coveragexml
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Publish
+publish/
+*.Publish.xml
+
+# Misc
+*.tmp
+*.bak
+*.orig
+*.swp
