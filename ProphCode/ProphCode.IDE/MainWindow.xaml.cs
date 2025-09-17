@@ -8,8 +8,6 @@ namespace ProphCode.IDE
         {
             InitializeComponent();
         }
-
-        // === Handlers de los botones ===
         private void BtnCompilar_Click(object sender, RoutedEventArgs e)
         {
             // TODO: aquí llamarás a tu compilador en ProphCode.Core con Editor.Text
@@ -28,16 +26,6 @@ namespace ProphCode.IDE
         {
             Editor.Clear();
             Consola.Clear();
-        }
-
-        private void Opciones_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Opciones (placeholder).");
-        }
-
-        private void Salir_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
 
         private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

@@ -95,7 +95,7 @@
         <!-- Menú -->
         <Menu Grid.Row="0" Grid.RowSpan="2">
             <MenuItem Header="_Archivo" Height="28" Foreground="#FFE6E6E6" BorderBrush="#FF212233">
-                <MenuItem Header="_Nuevo"   InputGestureText="Ctrl+N" x:Name="mnuNuevo"/>
+                <MenuItem Header="_Nuevo"   InputGestureText="Ctrl+N" Click="Nuevo_Click"/>
                 <MenuItem Header="_Guardar" InputGestureText="Ctrl+S" x:Name="mnuGuardar"/>
             </MenuItem>
             <MenuItem Header="_Opciones" Foreground="#FFD9D9D9" BorderBrush="#FF212233">
