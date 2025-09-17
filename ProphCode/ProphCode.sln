@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphCode.Core", "ProphCode.Core\ProphCode.Core.csproj", "{FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphCode.IDE", "ProphCode.IDE\ProphCode.IDE.csproj", "{8A33C40E-359C-4CD7-8F55-FC98834FEB9A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88} = {FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

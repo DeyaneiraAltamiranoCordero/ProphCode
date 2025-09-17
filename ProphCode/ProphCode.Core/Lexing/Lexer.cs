@@ -8,9 +8,9 @@ namespace ProphCode.Core.Lexing
 {
     public sealed class Lexer
     {
-        private string _src;
+        private string _src = "";
         private int _i, _line, _col;
-        private List<Token> _tokens;
+        private List<Token> _tokens= new List<Token>();
 
         public IList<Token> Tokenize(string source)
         {
