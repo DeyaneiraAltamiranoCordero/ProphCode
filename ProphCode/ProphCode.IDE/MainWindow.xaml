@@ -154,7 +154,7 @@
                     </DockPanel>
 
                     <!-- Consola -->
-                    <TextBox x:Name="Consola"
+                    <TextBox x:Name="Output"
                              IsReadOnly="True"
                              VerticalScrollBarVisibility="Auto"
                              HorizontalScrollBarVisibility="Auto"

@@ -22,4 +22,3 @@ namespace ProphCode.Core.Lexing
         public override string ToString() => $"{Kind} \"{Lexeme}\" ({Line},{Col})";
     }
 }
-

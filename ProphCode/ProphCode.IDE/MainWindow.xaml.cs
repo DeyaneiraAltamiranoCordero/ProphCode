@@ -1,47 +1,37 @@
-﻿using System.Windows;
-
+﻿using ProphCode.Core.Compiler;
 using ProphCode.Core.Lexing;
 using System.Text;
+using System.Windows;
 
 namespace ProphCode.IDE
 {
     public partial class MainWindow : Window
     {
+        private readonly Compiler compiler = new();
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
         private void BtnCompilar_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                // 1) Obtener el código fuente del editor
-                // Si tu Editor es TextBox:
-                string source = Editor.Text;
+            
+                string textEditor = Editor.Text;             // <- lo que escribiste
+                var result = compiler.Compile(textEditor);         // <- fachada Core
 
-                // Si fuera RichTextBox, usa esto en su lugar:
-                // string source = new TextRange(Editor.Document.ContentStart, Editor.Document.ContentEnd).Text;
-
-                // 2) Ejecutar el lexer
-                var lexer = new Lexer();
-                var tokens = lexer.Tokenize(source);
-
-                // 3) Mostrar los tokens en la consola
                 var sb = new StringBuilder();
-                sb.AppendLine("[LEX] Tokens:");
-                foreach (var t in tokens)
+                foreach (var d in result.Diagnostics)
+                    sb.AppendLine($"[{d.Severity}] ({d.Line},{d.Col}) {d.Message}");
+
+                if (result.Output.Any())
                 {
-                    sb.AppendLine($"{t.Kind,-18} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
+                    sb.AppendLine("----- Salida -----");
+                    foreach (var line in result.Output) sb.AppendLine(line);
                 }
 
-                Consola.Text = sb.ToString();
-                Consola.ScrollToEnd();
-            }
-            catch (Exception ex)
-            {
-                Consola.Text = "[LEX ERROR] " + ex.Message;
-                Consola.ScrollToEnd();
-            }
+                Output.Text = sb.ToString();          // lo ves en la IU
+            
         }
 
         private static string Escape(string s)
@@ -56,15 +46,15 @@ namespace ProphCode.IDE
         private void BtnEjecutar_Click(object sender, RoutedEventArgs e)
         {
             // TODO: aquí invocarás tu runtime/intérprete con el resultado de compilar
-            Consola.AppendText("\n[INFO] Ejecutando...\nHello, World!");
-            Consola.ScrollToEnd();
+            Output.AppendText("\n[INFO] Ejecutando...\nHello, World!");
+            Output.ScrollToEnd();
         }
 
         // === Opcional: handlers del menú (si les pusiste Click en XAML) ===
         private void Nuevo_Click(object sender, RoutedEventArgs e)
         {
             Editor.Clear();
-            Consola.Clear();
+            Output.Clear();
         }
 
         private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

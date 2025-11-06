@@ -8,7 +8,8 @@ namespace ProphCode.Core.Lexing
 {
     public enum TokenKind
     {
-        // ---- Literales e Identificadores
+        // ---- Literales e Identificadores 
+        //Para poder identificar nombres de variables 
         Ident,            // nombres de variables/funciones
         IntLit,           // 123
         DecLit,           // 12.34
@@ -48,6 +49,7 @@ namespace ProphCode.Core.Lexing
         Semi, Comma, Colon,
 
         // ---- Especial
+        //este es para saber que despues de dissaper ya no hay mas codigo. Esto es un " "
         Eof
     }
 }

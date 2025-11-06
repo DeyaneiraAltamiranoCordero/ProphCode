@@ -8,8 +8,8 @@ namespace ProphCode.Core.Lexing
 {
     public static class Words
     {
-        public static readonly Dictionary<string, TokenKind> Map = /*Recibe un texto y lo pasa a un tipo de token*/
-            new Dictionary<string, TokenKind>
+        public static readonly IDictionary<string, TokenKind> Map =
+            new Dictionary<string, TokenKind> /*(StringComparer.Ordinal) si quieres forzar case-sensitive explícito*/
             {
                 // ---- Operadores con palabra
                 ["beyone"] = TokenKind.Beyone,     // >
@@ -24,13 +24,13 @@ namespace ProphCode.Core.Lexing
 
                 // ---- Palabras reservadas (Kw*)
                 // Funciones / flujo principal
-                ["spell"] = TokenKind.KwSpell,   //funcion
+                ["spell"] = TokenKind.KwSpell,
                 ["endSpell"] = TokenKind.KwEndSpell,
-                ["abracadabra"] = TokenKind.KwAbracadabra,  //funcion principal
+                ["abracadabra"] = TokenKind.KwAbracadabra,
                 ["disappear"] = TokenKind.KwDisappear,
                 ["return"] = TokenKind.KwReturn,
-                ["silence"] = TokenKind.KwSilence, //funcion sin retorno
-                ["invoke"] = TokenKind.KwInvoke, 
+                ["silence"] = TokenKind.KwSilence,
+                ["invoke"] = TokenKind.KwInvoke,
 
                 // Control
                 ["if_spell_say"] = TokenKind.KwIfSpellSay,
@@ -48,10 +48,10 @@ namespace ProphCode.Core.Lexing
                 ["reveal"] = TokenKind.KwReveal,
                 ["and"] = TokenKind.KwAnd,
                 ["or"] = TokenKind.KwOr,
-                ["anti"] = TokenKind.KwAnti, //not
+                ["anti"] = TokenKind.KwAnti,
 
                 // Tipos / calificador
-                ["prophecy"] = TokenKind.KwProphecy, //Constante
+                ["prophecy"] = TokenKind.KwProphecy,
                 ["text"] = TokenKind.KwText,
                 ["int"] = TokenKind.KwInt,
                 ["dec"] = TokenKind.KwDec,
@@ -60,9 +60,11 @@ namespace ProphCode.Core.Lexing
                 ["vec"] = TokenKind.KwVec,
 
                 // Ancestral_lopp
+
                 ["str"] = TokenKind.KwStr,
                 ["end"] = TokenKind.KwEnd,
                 ["igm"] = TokenKind.KwIgm,
             };
     }
 }
+
