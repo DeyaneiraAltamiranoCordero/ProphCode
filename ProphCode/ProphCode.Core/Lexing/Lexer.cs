@@ -65,7 +65,7 @@ namespace ProphCode.Core.Lexing
             return _tokens;
         }
 
-        // ---------- helpers de palabras, números, strings, char ----------
+        
         private void LexWord(int startLine, int startCol)
         {
             var sb = new StringBuilder();
@@ -160,7 +160,7 @@ namespace ProphCode.Core.Lexing
             Add(TokenKind.CharLit, value.ToString(), startLine, startCol);
         }
 
-        // ---------- comentarios y espacios ----------
+        //  comentarios y espacios
         private void SkipWhitespaceAndComments()
         {
             bool again;

@@ -32,7 +32,7 @@ namespace ProphCode.Core.Lexing
         KwReveal, KwAnd, KwOr, KwAnti,
 
         // Tipos / calificador
-        KwProphecy, KwText, KwInt, KwDec, KwBool, KwList, KwVec,
+        KwProphecy, KwText, KwInt, KwDec, KwBool, KwList, KwVec, KwChar,
 
         KwScry,   // función de entrada 
         KwStr, KwEnd, KwIgm, // para el for ancestral_loop: str/end/igm

@@ -43,6 +43,8 @@ namespace ProphCode.Core.Lexing
                 ["ancestral_loop"] = TokenKind.KwAncestralLoop,
                 ["eternal_loop"] = TokenKind.KwEternalLoop,
                 ["eternal_loop_once"] = TokenKind.KwEternalLoopOnce,
+                ["scry"] = TokenKind.KwScry,
+
 
                 // E/S y lógicas por palabra
                 ["reveal"] = TokenKind.KwReveal,
@@ -58,6 +60,7 @@ namespace ProphCode.Core.Lexing
                 ["bool"] = TokenKind.KwBool,
                 ["list"] = TokenKind.KwList,
                 ["vec"] = TokenKind.KwVec,
+                ["char"] = TokenKind.KwChar,
 
                 // Ancestral_lopp
 
