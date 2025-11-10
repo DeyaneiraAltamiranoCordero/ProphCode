@@ -11,11 +11,24 @@ namespace ProphCode.Core.Runtime
 
         private readonly Dictionary<string, FunctionDecl> _funcs = new(StringComparer.Ordinal);
 
+
+        public Func<string, string> ReadLine { get; set; }   // (prompt) -> respuesta
+        public Action<string> WriteLine { get; set; }
+
         public Interpreter(ProgramNode prog)
         {
             _prog = prog ?? throw new ArgumentNullException(nameof(prog));
             foreach (var f in _prog.Functions)
                 _funcs[f.Name] = f;  // última definición gana (simple)
+
+
+            // defaults (si no se inyectan, usa la consola)
+            ReadLine = (prompt) =>
+            {
+                if (!string.IsNullOrEmpty(prompt)) Console.Write(prompt);
+                return Console.ReadLine() ?? "";
+            };
+            WriteLine = (text) => Console.WriteLine(text ?? "");
         }
 
       
@@ -239,20 +252,16 @@ namespace ProphCode.Core.Runtime
             {
                 var parts = new List<string>();
                 foreach (var a in c.Args) parts.Add(EvalExpr(a, callerEnv).ToString());
-                Console.WriteLine(string.Join("", parts));
+                WriteLine(string.Join("", parts));   // ← antes usabas Console.WriteLine
                 return PcValue.Null();
             }
             if (string.Equals(name, "scry", StringComparison.Ordinal))
             {
-                if (c.Args.Count > 0)
-                {
-                    var p = EvalExpr(c.Args[0], callerEnv).ToString();
-                    if (!string.IsNullOrEmpty(p)) Console.Write(p);
-                }
-                var line = Console.ReadLine() ?? "";
+                string prompt = "";
+                if (c.Args.Count > 0) prompt = EvalExpr(c.Args[0], callerEnv).ToString();
+                var line = ReadLine(prompt) ?? "";   // ← antes usabas Console.ReadLine
                 return PcValue.Text(line);
             }
-
             // 2) Función de usuario
             if (!_funcs.TryGetValue(name, out var f))
                 throw new Exception($"[Runtime] Función '{name}' no encontrada.");

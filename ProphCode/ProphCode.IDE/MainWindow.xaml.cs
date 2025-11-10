@@ -69,49 +69,58 @@ namespace ProphCode.IDE
                 .Replace("\t", "\\t");
         }
 
-
         private void BtnEjecutar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string source = Editor.Text;
 
-                // 1) LEXER
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
-                // 2) PARSER (¡no uses ExprParser aquí!)
                 var parser = new Parser(tokens);
                 var prog = parser.ParseProgram();
 
-                // 3) CAPTURAR Console.Write/WriteLine en la consola del IDE (opcional pero útil)
-                var sw = new System.IO.StringWriter();
-                var oldOut = Console.Out;
-                Console.SetOut(sw);
+                var runner = new ProphCode.Core.Runtime.Interpreter(prog);
 
-                try
+                // 1) Capturar salida en la consola del IDE (Consola TextBox)
+                var outBuffer = new StringBuilder();
+                runner.WriteLine = (text) =>
                 {
-                    // 4) INTÉRPRETE
-                    var runner = new ProphCode.Core.Runtime.Interpreter(prog);
-                    runner.Run();
+                    Dispatcher.Invoke(() =>
+                    {
+                        Consola.AppendText(text + Environment.NewLine);
+                        Consola.ScrollToEnd();
+                    });
+                    outBuffer.AppendLine(text);
+                };
 
-                    // 5) Mostrar salida capturada
-                    Console.Out.Flush();
-                    Consola.Text = "[RUN] OK\n" + sw.ToString();
-                }
-                finally
+                // 2) Input para scry: usa un InputBox sencillo
+                runner.ReadLine = (prompt) =>
                 {
-                    Console.SetOut(oldOut);
-                }
+                    // Opción A: Microsoft.VisualBasic.InputBox (agrega referencia Microsoft.VisualBasic)
+                    return Microsoft.VisualBasic.Interaction.InputBox(
+                        string.IsNullOrEmpty(prompt) ? "Ingrese un valor:" : prompt,
+                        "scry()", ""
+                    );
 
+                    // Opción B (si no quieres Microsoft.VisualBasic):
+                    // Crea tu propia ventana modal InputDialog y devuélvela aquí.
+                };
+
+                // limpia la consola y corre
+                Consola.Text = "[RUN] Iniciando...\n";
+                runner.Run();
+                Consola.AppendText("[RUN] OK\n");
                 Consola.ScrollToEnd();
             }
             catch (Exception ex)
             {
-                Consola.Text = "[RUN ERROR] " + ex.Message + "\n" + Consola.Text;
+                Consola.AppendText("[RUN ERROR] " + ex.Message + "\n");
                 Consola.ScrollToEnd();
             }
         }
+
 
         // === Opcional: handlers del menú (si les pusiste Click en XAML) ===
         private void Nuevo_Click(object sender, RoutedEventArgs e)
