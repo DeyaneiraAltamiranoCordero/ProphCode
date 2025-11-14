@@ -20,7 +20,7 @@ namespace ProphCode.Core.Parsing
             _pos = 0;
         }
 
-        // NUEVO: ctor con posición inicial
+        
         public ExprParser(IList<Token> tokens, int startPos)
         {
             _toks = tokens ?? throw new ArgumentNullException(nameof(tokens));

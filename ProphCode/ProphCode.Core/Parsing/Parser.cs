@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using ProphCode.Core.AST;
+﻿using ProphCode.Core.AST;
 using ProphCode.Core.Lexing;
+using ProphCode.Core.Runtime;
+using System;
+using System.Collections.Generic;
 
 namespace ProphCode.Core.Parsing
 {
@@ -206,7 +207,6 @@ namespace ProphCode.Core.Parsing
             Expect(TokenKind.Semi, "Se esperaba ';' después de return.");
             return new ReturnStmt { Value = e };
         }
-
         private Stmt ParseVarDecl()
         {
             bool isConst = Match(TokenKind.KwProphecy);
@@ -218,8 +218,17 @@ namespace ProphCode.Core.Parsing
                 init = ParseExpr();
 
             Expect(TokenKind.Semi, "Se esperaba ';' al final de la declaración.");
-            return new VarDeclStmt { IsConst = isConst, TypeName = typeName, Name = nameTok.Lexeme, Init = init, Line = nameTok.Line, Col = nameTok.Col };
+            return new VarDeclStmt
+            {
+                IsConst = isConst,
+                TypeName = typeName,
+                Name = nameTok.Lexeme,
+                Init = init,
+                Line = nameTok.Line,
+                Col = nameTok.Col
+            };
         }
+
 
         // ===== helpers =====
         private Token Current => _toks[_pos];
