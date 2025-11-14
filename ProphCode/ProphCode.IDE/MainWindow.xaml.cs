@@ -1,7 +1,6 @@
 using ProphCode.Core.AST;
 using ProphCode.Core.Lexing;
 using ProphCode.Core.Parsing;
-using ProphCode.Core.Semantic;
 using System.Text;
 using System.Windows;
 
@@ -20,34 +19,44 @@ namespace ProphCode.IDE
             {
                 string source = Editor.Text;
 
-                // Análisis léxico
+                //Aquí empieza el analisis lexer
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
-                // Análisis sintáctico
-                var parser = new Parser(tokens);
-                var program = parser.ParseProgram();
+                var sb = new StringBuilder();
+                sb.AppendLine("[LEX] Tokens:");
+                foreach (var t in tokens)
+                    sb.AppendLine($"{t.Kind,-20} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
 
-                // Análisis semántico
+                //Después pasa al parser para hacer el arbol y el analsis sintáctico
+                sb.AppendLine();
+                sb.AppendLine("[PARSER] Árbol sintáctico:");
+
                 try
                 {
-                    var semanticAnalyzer = new SemanticAnalyzer();
-                    semanticAnalyzer.Analyze(program);
+                    var parser = new Parser(tokens);
+                    var prog = parser.ParseProgram();
+
+                   //hace el arbol(Lo imprime en realidad)
+                    sb.AppendLine(AstPrinter.Print(prog));
                 }
-                catch (Exception semEx)
+                catch (Exception exParse)
                 {
-                    Consola.Text = $"[SEMANTIC ERROR] {semEx.Message}";
-                    return;
+                    sb.AppendLine();
+                    sb.AppendLine("[Parse ERROR] " + exParse.Message);
                 }
 
-                // Si todo está bien, continuar con la ejecución o generación de código
-                Consola.Text = "[COMPILACIÓN EXITOSA]";
+                //Muestra en el IDE el resultado
+                Consola.Text = sb.ToString();
+                Consola.ScrollToEnd();
             }
             catch (Exception ex)
             {
-                Consola.Text = $"[ERROR] {ex.Message}";
+                Consola.Text = "[LEX ERROR] " + ex.Message;
+                Consola.ScrollToEnd();
             }
         }
+
         private string Escape(string s)
         {
             if (s == null) return "";
