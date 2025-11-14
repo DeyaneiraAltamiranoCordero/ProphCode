@@ -286,7 +286,65 @@ namespace ProphCode.IDE
         {
             InsertTextInEditor("invoke nombreFuncion();  ~Invoca una función~");
         }
+        //Control
+        private void InsertIfElseStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "if_spell_say (condición) {\n" +
+                "    ~Bloque si la condición es verdadera~\n" +
+                "} if_fail_say (otraCondición) {\n" +
+                "    ~Bloque si la otra condición es verdadera~\n" +
+                "} if_fail {\n" +
+                "    ~Bloque si ninguna condición es verdadera~\n" +
+                "}"
+            );
+        }
 
+        private void InsertWhileStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "eternal_loop (condición) {\n" +
+                "    ~Bloque que se ejecuta mientras la condición sea verdadera~\n" +
+                "}"
+            );
+        }
+
+        private void InsertDoWhileStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "eternal_loop_once {\n" +
+                "    ~Bloque que se ejecuta al menos una vez~\n" +
+                "} (condición);"
+            );
+        }
+
+        private void InsertForStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "ancestral_loop (str int i -> 0; end i under 10; igm i -> i + 1) {\n" +
+                "    ~Bloque que se ejecuta para cada iteración~\n" +
+                "}"
+            );
+        }
+
+        private void InsertSwitchStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "destiny_choose (expresión) {\n" +
+                "    path valor1: {\n" +
+                "        ~Bloque si la expresión coincide con valor1~\n" +
+                "        break;\n" +
+                "    }\n" +
+                "    path valor2: {\n" +
+                "        ~Bloque si la expresión coincide con valor2~\n" +
+                "        break;\n" +
+                "    }\n" +
+                "    hidden_path: {\n" +
+                "        ~Bloque por defecto si no coincide con ningún valor~\n" +
+                "    }\n" +
+                "}"
+            );
+        }
         //Insertar en el editor de texto en la posición del cursor
         private void InsertTextInEditor(string text)
         {

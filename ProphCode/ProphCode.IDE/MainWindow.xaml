@@ -102,7 +102,16 @@
                 <MenuItem Header="Palabras reservadas" x:Name="mnuPalabras"/>
 
                 <MenuItem Header="Sintaxis">
-                    <MenuItem Header="Control"     x:Name="mnuSintaxisControl"/>
+                    <MenuItem Header="Control" x:Name="mnuSintaxisControl">
+                        <MenuItem Header="Condicional If-Else" Click="InsertIfElseStructure">
+                        </MenuItem>
+                        <MenuItem Header="Bucles">
+                            <MenuItem Header="While" Click="InsertWhileStructure"/>
+                            <MenuItem Header="Do-While" Click="InsertDoWhileStructure"/>
+                            <MenuItem Header="For" Click="InsertForStructure"/>
+                        </MenuItem>
+                        <MenuItem Header="Switch" Click="InsertSwitchStructure"/>
+                    </MenuItem>
                     <MenuItem Header="Funciones" x:Name="mnuSintaxisFunciones">
                         <MenuItem Header="Definir función" Click="InsertFunctionStructure"/>
                         <MenuItem Header="Función principal" Click="InsertMainFunctionStructure"/>
