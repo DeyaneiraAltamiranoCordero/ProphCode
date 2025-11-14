@@ -19,7 +19,7 @@ namespace ProphCode.IDE
             {
                 string source = Editor.Text;
 
-                // 1) LEXER
+                //Aquí empieza el analisis lexer
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
@@ -28,7 +28,7 @@ namespace ProphCode.IDE
                 foreach (var t in tokens)
                     sb.AppendLine($"{t.Kind,-20} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
 
-                // 2) PARSER: intentar parsear el programa completo
+                //Después pasa al parser para hacer el arbol y el analsis sintáctico
                 sb.AppendLine();
                 sb.AppendLine("[PARSER] Árbol sintáctico:");
 
@@ -37,7 +37,7 @@ namespace ProphCode.IDE
                     var parser = new Parser(tokens);
                     var prog = parser.ParseProgram();
 
-                    // 3) Imprimir árbol AST completo
+                   //hace el arbol(Lo imprime en realidad)
                     sb.AppendLine(AstPrinter.Print(prog));
                 }
                 catch (Exception exParse)
@@ -46,7 +46,7 @@ namespace ProphCode.IDE
                     sb.AppendLine("[Parse ERROR] " + exParse.Message);
                 }
 
-                // 4) Mostrar todo en la consola del IDE
+                //Muestra en el IDE el resultado
                 Consola.Text = sb.ToString();
                 Consola.ScrollToEnd();
             }
@@ -57,7 +57,6 @@ namespace ProphCode.IDE
             }
         }
 
-        // Utilidad auxiliar para escapar comillas, etc.
         private string Escape(string s)
         {
             if (s == null) return "";
@@ -83,7 +82,7 @@ namespace ProphCode.IDE
 
                 var runner = new ProphCode.Core.Runtime.Interpreter(prog);
 
-                // 1) Capturar salida en la consola del IDE (Consola TextBox)
+                // Captuptura la salida en la consola del IDE
                 var outBuffer = new StringBuilder();
                 runner.WriteLine = (text) =>
                 {
@@ -95,20 +94,16 @@ namespace ProphCode.IDE
                     outBuffer.AppendLine(text);
                 };
 
-                // 2) Input para scry: usa un InputBox sencillo
+                //Maneja las entradas de scry()
                 runner.ReadLine = (prompt) =>
                 {
-                    // Opción A: Microsoft.VisualBasic.InputBox (agrega referencia Microsoft.VisualBasic)
                     return Microsoft.VisualBasic.Interaction.InputBox(
                         string.IsNullOrEmpty(prompt) ? "Ingrese un valor:" : prompt,
                         "scry()", ""
                     );
-
-                    // Opción B (si no quieres Microsoft.VisualBasic):
-                    // Crea tu propia ventana modal InputDialog y devuélvela aquí.
                 };
 
-                // limpia la consola y corre
+                // limpia la consola
                 Consola.Text = "[RUN] Iniciando...\n";
                 runner.Run();
                 Consola.AppendText("[RUN] OK\n");
@@ -120,9 +115,7 @@ namespace ProphCode.IDE
                 Consola.ScrollToEnd();
             }
         }
-
-
-        // === Opcional: handlers del menú (si les pusiste Click en XAML) ===
+        
         private void Nuevo_Click(object sender, RoutedEventArgs e)
         {
             Editor.Clear();
@@ -132,6 +125,235 @@ namespace ProphCode.IDE
         private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
+        }
+         
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        //Tipos de datos
+        private void InsertProphecy(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("prophecy int nombreConstante -> 0;");
+        }
+
+        private void InsertText(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("text nombreString -> \"Hola mundo\";");
+        }
+
+        private void InsertInt(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("int nombreEntero -> 42;");
+        }
+
+        private void InsertDec(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("dec nombreDecimal -> 3.14;");
+        }
+
+        private void InsertBool(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("bool nombreBolean -> lumus;");
+        }
+
+        private void InsertChar(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("char nombreLetra -> 'a';");
+        }
+
+        private void InsertList(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("list<int> nombreLista -> [];");
+        }
+
+        private void InsertVec(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("vec<int> nombreVector -> [0, 1, 2];");
+        }
+
+        //Operadores
+        private void InsertGreaterThan(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("variableDeclada -> a beyone b;");
+        }
+
+        private void InsertGreaterThanOrEqual(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a beyoneq b;");
+        }
+
+        private void InsertLessThan(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a under b;");
+        }
+
+        private void InsertLessThanOrEqual(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a undereq b;");
+        }
+
+        private void InsertAddition(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoSuma -> a + b;");
+        }
+
+        private void InsertSubtraction(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoResta -> a - b;");
+        }
+
+        private void InsertMultiplication(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoMulti -> a * b;");
+        }
+
+        private void InsertDivision(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoDiv -> a / b;");
+        }
+
+        private void InsertModulo(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoMod -> a % b;");
+        }
+        //
+        //Palabras reservadas literales
+        private void InsertLiteralTrue(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("lumus;  ~Representa true~");
+        }
+
+        private void InsertLiteralFalse(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("nox;  ~Representa false~");
+        }
+
+        private void InsertLiteralNull(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("null;  ~Representa un valor nulo~");
+        }
+
+        //Operadores Lógicas
+        private void InsertReveal(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("reveal(\"Hola mundo\");  ~Muestra un mensaje en consola~");
+        }
+
+        private void InsertAnd(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a and b;  ~Operador lógico AND~");
+        }
+
+        private void InsertOr(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a or b;  ~Operador lógico OR~");
+        }
+
+        private void InsertAnti(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> anti a;  ~Operador lógico NOT~");
+        }
+        //Funciones
+        private void InsertFunctionStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "spell <tipo> nombreFuncion(<tipoParametro> <nombreVariable>) ->{\n" +
+
+                "    <tipo> variable -> <asignacion>;\n" +
+                "    return variable;\n" +
+
+                "}endSpell"
+            );
+        }
+        private void InsertMainFunctionStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "abracadabra {\n" +
+                "    ~Bloque principal del programa~\n" +
+                "} disappear"
+            );
+        }
+        private void InsertFunctionWithoutReturn(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "spell silence nombreFuncion(<tipoParametro> <nombreVariable>) -> {\n" +
+                "    ~Cuerpo de la función sin retorno~\n" +
+                "} endSpell"
+            );
+        }
+        private void InsertInvokeFunction(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("invoke nombreFuncion();  ~Invoca una función~");
+        }
+        //Control
+        private void InsertIfElseStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "if_spell_say (condición) {\n" +
+                "    ~Bloque si la condición es verdadera~\n" +
+                "} if_fail_say (otraCondición) {\n" +
+                "    ~Bloque si la otra condición es verdadera~\n" +
+                "} if_fail {\n" +
+                "    ~Bloque si ninguna condición es verdadera~\n" +
+                "}"
+            );
+        }
+
+        private void InsertWhileStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "eternal_loop (condición) {\n" +
+                "    ~Bloque que se ejecuta mientras la condición sea verdadera~\n" +
+                "}"
+            );
+        }
+
+        private void InsertDoWhileStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "eternal_loop_once {\n" +
+                "    ~Bloque que se ejecuta al menos una vez~\n" +
+                "} (condición);"
+            );
+        }
+
+        private void InsertForStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "ancestral_loop (str int i -> 0; end i under 10; igm i -> i + 1) {\n" +
+                "    ~Bloque que se ejecuta para cada iteración~\n" +
+                "}"
+            );
+        }
+
+        private void InsertSwitchStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "destiny_choose (expresión) {\n" +
+                "    path valor1: {\n" +
+                "        ~Bloque si la expresión coincide con valor1~\n" +
+                "        break;\n" +
+                "    }\n" +
+                "    path valor2: {\n" +
+                "        ~Bloque si la expresión coincide con valor2~\n" +
+                "        break;\n" +
+                "    }\n" +
+                "    hidden_path: {\n" +
+                "        ~Bloque por defecto si no coincide con ningún valor~\n" +
+                "    }\n" +
+                "}"
+            );
+        }
+        //Insertar en el editor de texto en la posición del cursor
+        private void InsertTextInEditor(string text)
+        {
+            int caretIndex = Editor.CaretIndex;
+
+            Editor.Text = Editor.Text.Insert(caretIndex, text);
+            Editor.CaretIndex = caretIndex + text.Length;
+
+            Editor.Focus(); //recibe el texto focus
         }
     }
 }

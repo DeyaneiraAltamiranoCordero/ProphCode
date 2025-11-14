@@ -376,7 +376,7 @@ namespace ProphCode.Core.Runtime
         {
             var name = c.FuncName;
 
-            // 1) Built-ins primero
+            // Built-ins primero
             if (string.Equals(name, "reveal", StringComparison.Ordinal))
             {
                 var parts = new List<string>();
@@ -391,7 +391,7 @@ namespace ProphCode.Core.Runtime
                 var line = ReadLine(prompt) ?? "";   // ← antes usabas Console.ReadLine
                 return PcValue.Text(line);
             }
-            // 2) Función de usuario
+            //  Función de usuario
             if (!_funcs.TryGetValue(name, out var f))
                 throw new Exception($"[Runtime] Función '{name}' no encontrada.");
 
@@ -422,6 +422,32 @@ namespace ProphCode.Core.Runtime
         }
 
 
+       
+        private PcValue CallBuiltin(CallExpr c, Env env)
+        {
+            if (string.Equals(c.FuncName, "reveal", StringComparison.Ordinal))
+            {
+                var parts = new List<string>();
+                foreach (var a in c.Args) parts.Add(EvalExpr(a, env).ToString());
+                Console.WriteLine(string.Join("", parts)); // imprime sin separador
+                return PcValue.Null();
+            }
+            if (string.Equals(c.FuncName, "scry", StringComparison.Ordinal))
+            {
+                // scry(prompt) -> text
+                if (c.Args.Count > 0)
+                {
+                    var p = EvalExpr(c.Args[0], env).ToString();
+                    if (!string.IsNullOrEmpty(p)) Console.Write(p);
+                }
+                var line = Console.ReadLine() ?? "";
+                return PcValue.Text(line);
+            }
+
+            throw new Exception($"[Runtime] Función '{c.FuncName}' no soportada aún en el MVP.");
+        }
+
+       
         private static bool IsNumber(PcValue v) => v.Kind == PcValue.K.Int || v.Kind == PcValue.K.Dec;
 
         private static PcValue Add(PcValue a, PcValue b)

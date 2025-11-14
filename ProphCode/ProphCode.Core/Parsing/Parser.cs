@@ -229,8 +229,7 @@ namespace ProphCode.Core.Parsing
             };
         }
 
-
-        // ===== helpers =====
+      
         private Token Current => _toks[_pos];
         private Token GetPrev() => _toks[Math.Max(0, _pos - 1)];
 
