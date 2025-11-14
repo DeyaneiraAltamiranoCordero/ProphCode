@@ -1,36 +1,39 @@
-﻿using System;
+﻿using ProphCode.Core.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProphCode.Core.Lexing
 {
     public static class Words
     {
         public static readonly IDictionary<string, TokenKind> Map =
-            new Dictionary<string, TokenKind> /*(StringComparer.Ordinal) si quieres forzar case-sensitive explícito*/
+            new Dictionary<string, TokenKind> 
             {
-                // ---- Operadores con palabra
+                //  Operadores con palabra
                 ["beyone"] = TokenKind.Beyone,     // >
                 ["beyoneq"] = TokenKind.BeyoneEq,   // >=
                 ["under"] = TokenKind.Under,      // <
                 ["undereq"] = TokenKind.UnderEq,    // <=
 
-                // ---- Literales por palabra
+       
+                //  Literales por palabra
                 ["lumus"] = TokenKind.BoolLit,      // true
                 ["nox"] = TokenKind.BoolLit,      // false
                 ["null"] = TokenKind.NullLit,      // null
 
-                // ---- Palabras reservadas (Kw*)
-                // Funciones / flujo principal
+                // Funciones y función principal
                 ["spell"] = TokenKind.KwSpell,
                 ["endSpell"] = TokenKind.KwEndSpell,
                 ["abracadabra"] = TokenKind.KwAbracadabra,
                 ["disappear"] = TokenKind.KwDisappear,
                 ["return"] = TokenKind.KwReturn,
                 ["silence"] = TokenKind.KwSilence,
-                ["invoke"] = TokenKind.KwInvoke,
+                ["invoke"] = TokenKind.KwInvoke,  
 
                 // Control
                 ["if_spell_say"] = TokenKind.KwIfSpellSay,
@@ -46,13 +49,13 @@ namespace ProphCode.Core.Lexing
                 ["scry"] = TokenKind.KwScry,
 
 
-                // E/S y lógicas por palabra
+                //Lógicas por palabra
                 ["reveal"] = TokenKind.KwReveal,
                 ["and"] = TokenKind.KwAnd,
                 ["or"] = TokenKind.KwOr,
                 ["anti"] = TokenKind.KwAnti,
 
-                // Tipos / calificador
+                // Tipos
                 ["prophecy"] = TokenKind.KwProphecy,
                 ["text"] = TokenKind.KwText,
                 ["int"] = TokenKind.KwInt,
@@ -62,12 +65,10 @@ namespace ProphCode.Core.Lexing
                 ["vec"] = TokenKind.KwVec,
                 ["char"] = TokenKind.KwChar,
 
-                // Ancestral_lopp
-
+                // Partes del Ancestral_lopp
                 ["str"] = TokenKind.KwStr,
                 ["end"] = TokenKind.KwEnd,
                 ["igm"] = TokenKind.KwIgm,
             };
     }
 }
-
