@@ -19,7 +19,7 @@ namespace ProphCode.IDE
             {
                 string source = Editor.Text;
 
-                //Aquí empieza el analisis lexer
+                // 1) LEXER
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
@@ -28,31 +28,54 @@ namespace ProphCode.IDE
                 foreach (var t in tokens)
                     sb.AppendLine($"{t.Kind,-20} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
 
-                //Después pasa al parser para hacer el arbol y el analsis sintáctico
+                // 2) PARSER
                 sb.AppendLine();
                 sb.AppendLine("[PARSER] Árbol sintáctico:");
 
+                ProgramNode prog;
                 try
                 {
                     var parser = new Parser(tokens);
-                    var prog = parser.ParseProgram();
+                    prog = parser.ParseProgram();
 
-                   //hace el arbol(Lo imprime en realidad)
+                    // Imprimir AST
                     sb.AppendLine(AstPrinter.Print(prog));
                 }
                 catch (Exception exParse)
                 {
                     sb.AppendLine();
                     sb.AppendLine("[Parse ERROR] " + exParse.Message);
+
+                    Consola.Text = sb.ToString();
+                    Consola.ScrollToEnd();
+                    return; // si hay error de sintaxis, no seguimos a semántica
                 }
 
-                //Muestra en el IDE el resultado
+                // 3) ANÁLISIS SEMÁNTICO
+                sb.AppendLine();
+                sb.AppendLine("[SEMANTIC] Análisis:");
+
+                var sema = new SemanticAnalyzer(prog);
+                sema.Analyze();
+
+                if (sema.Errors.Count == 0)
+                {
+                    sb.AppendLine("Sin errores semánticos. ✔");
+                }
+                else
+                {
+                    sb.AppendLine("Se encontraron errores semánticos:");
+                    foreach (var err in sema.Errors)
+                        sb.AppendLine(" - " + err);
+                }
+
+                // 4) Mostrar en la consola del IDE
                 Consola.Text = sb.ToString();
                 Consola.ScrollToEnd();
             }
             catch (Exception ex)
             {
-                Consola.Text = "[LEX ERROR] " + ex.Message;
+                Consola.Text = "[LEX/GENERAL ERROR] " + ex.Message;
                 Consola.ScrollToEnd();
             }
         }
@@ -67,23 +90,36 @@ namespace ProphCode.IDE
                 .Replace("\n", "\\n")
                 .Replace("\t", "\\t");
         }
-
         private void BtnEjecutar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string source = Editor.Text;
 
+                // 1) LEXER
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
+                // 2) PARSER
                 var parser = new Parser(tokens);
                 var prog = parser.ParseProgram();
 
+                // 3) ANÁLISIS SEMÁNTICO ANTES DE EJECUTAR
+                var sema = new SemanticAnalyzer(prog);
+                sema.Analyze();
+
+                if (sema.Errors.Count > 0)
+                {
+                    Consola.AppendText("[RUN] No se ejecuta por errores semánticos:\n");
+                    foreach (var err in sema.Errors)
+                        Consola.AppendText(" - " + err + "\n");
+                    Consola.ScrollToEnd();
+                    return; // No permitimos la ejecución si hay errores semánticos
+                }
+
+                // 4) RUNTIME / INTERPRETER
                 var runner = new ProphCode.Core.Runtime.Interpreter(prog);
 
-                // Captuptura la salida en la consola del IDE
-                var outBuffer = new StringBuilder();
                 runner.WriteLine = (text) =>
                 {
                     Dispatcher.Invoke(() =>
@@ -91,10 +127,8 @@ namespace ProphCode.IDE
                         Consola.AppendText(text + Environment.NewLine);
                         Consola.ScrollToEnd();
                     });
-                    outBuffer.AppendLine(text);
                 };
 
-                //Maneja las entradas de scry()
                 runner.ReadLine = (prompt) =>
                 {
                     return Microsoft.VisualBasic.Interaction.InputBox(
@@ -103,8 +137,7 @@ namespace ProphCode.IDE
                     );
                 };
 
-                // limpia la consola
-                Consola.Text = "[RUN] Iniciando...\n";
+                Consola.AppendText("[RUN] Iniciando...\n");
                 runner.Run();
                 Consola.AppendText("[RUN] OK\n");
                 Consola.ScrollToEnd();
@@ -115,7 +148,8 @@ namespace ProphCode.IDE
                 Consola.ScrollToEnd();
             }
         }
-        
+
+
         private void Nuevo_Click(object sender, RoutedEventArgs e)
         {
             Editor.Clear();

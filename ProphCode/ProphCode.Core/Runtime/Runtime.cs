@@ -59,8 +59,7 @@ namespace ProphCode.Core.Runtime
         public PcValue Value;
         public bool IsConst;
     }
-
-    public sealed class Env
+    public class Env
     {
         private readonly Dictionary<string, VarCell> _map = new(StringComparer.Ordinal);
         private readonly Env _parent;
@@ -70,18 +69,16 @@ namespace ProphCode.Core.Runtime
             _parent = parent;
         }
 
+        // Declarar una nueva variable en el entorno
         public void Declare(string name, PcValue v, bool isConst)
         {
             if (_map.ContainsKey(name))
                 throw new Exception($"[Semántica] Variable '{name}' ya declarada en este ámbito.");
 
-            _map[name] = new VarCell
-            {
-                Value = v,
-                IsConst = isConst
-            };
+            _map[name] = new VarCell { Value = v, IsConst = isConst };
         }
 
+        // Obtener una variable del entorno
         public bool TryGet(string name, out VarCell cell)
         {
             if (_map.TryGetValue(name, out cell))
@@ -94,39 +91,31 @@ namespace ProphCode.Core.Runtime
             return false;
         }
 
+        // Asignar un valor a una variable en el entorno
         public void Assign(string name, PcValue v)
         {
             if (!TryGet(name, out var cell))
                 throw new Exception($"[Semántica] Variable '{name}' no declarada.");
 
             if (cell.IsConst)
-                throw new Exception($"[Semántica] Variable '{name}' es 'prophecy' (const).");
+                throw new Exception($"[Semántica] Variable '{name}' es constante.");
 
             if (!AreTypesCompatible(cell.Value, v))
-                throw new Exception(
-                    $"[Semántica] Tipo incompatible al asignar valor de tipo {v.Kind} a variable '{name}' de tipo {cell.Value.Kind}.");
+                throw new Exception($"[Semántica] Tipo incompatible al asignar valor de tipo {v.Kind} a variable '{name}' de tipo {cell.Value.Kind}.");
 
             cell.Value = v;
         }
 
-        // compara tipos de valor "existente" vs valor "nuevo"
         private static bool AreTypesCompatible(PcValue existing, PcValue incoming)
         {
-            // permitir null a cualquier cosa
-            if (incoming.Kind == PcValue.K.Null)
-                return true;
-
-            // mismo tipo = ok
-            if (existing.Kind == incoming.Kind)
-                return true;
-
-            // permitimos int <-> dec
+            // Verifica si los tipos son compatibles
+            if (existing.Kind == incoming.Kind) return true;
             if (existing.Kind == PcValue.K.Int && incoming.Kind == PcValue.K.Dec) return true;
             if (existing.Kind == PcValue.K.Dec && incoming.Kind == PcValue.K.Int) return true;
 
-            // todo lo demás: incompatible
             return false;
         }
     }
+
 
 }
