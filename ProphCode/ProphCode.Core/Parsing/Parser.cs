@@ -221,7 +221,7 @@ namespace ProphCode.Core.Parsing
             return new VarDeclStmt { IsConst = isConst, TypeName = typeName, Name = nameTok.Lexeme, Init = init, Line = nameTok.Line, Col = nameTok.Col };
         }
 
-        // ===== helpers =====
+      
         private Token Current => _toks[_pos];
         private Token GetPrev() => _toks[Math.Max(0, _pos - 1)];
 

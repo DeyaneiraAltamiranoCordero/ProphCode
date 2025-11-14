@@ -177,7 +177,7 @@ namespace ProphCode.Core.Runtime
             }
         }
 
-        // ===== Expresiones =====
+        //  Expresiones 
         private PcValue EvalExpr(Expr e, Env env)
         {
             switch (e)
@@ -247,7 +247,7 @@ namespace ProphCode.Core.Runtime
         {
             var name = c.FuncName;
 
-            // 1) Built-ins primero
+            // Built-ins primero
             if (string.Equals(name, "reveal", StringComparison.Ordinal))
             {
                 var parts = new List<string>();
@@ -262,7 +262,7 @@ namespace ProphCode.Core.Runtime
                 var line = ReadLine(prompt) ?? "";   // ← antes usabas Console.ReadLine
                 return PcValue.Text(line);
             }
-            // 2) Función de usuario
+            //  Función de usuario
             if (!_funcs.TryGetValue(name, out var f))
                 throw new Exception($"[Runtime] Función '{name}' no encontrada.");
 
@@ -293,7 +293,7 @@ namespace ProphCode.Core.Runtime
         }
 
 
-        // ===== Builtins MVP =====
+        //  Builtins MVP 
         private PcValue CallBuiltin(CallExpr c, Env env)
         {
             if (string.Equals(c.FuncName, "reveal", StringComparison.Ordinal))
@@ -318,7 +318,7 @@ namespace ProphCode.Core.Runtime
             throw new Exception($"[Runtime] Función '{c.FuncName}' no soportada aún en el MVP.");
         }
 
-        // ===== helpers numéricos/comparación/booleanos =====
+        //  helpers numéricos/comparación/booleanos 
         private static bool IsNumber(PcValue v) => v.Kind == PcValue.K.Int || v.Kind == PcValue.K.Dec;
 
         private static PcValue Add(PcValue a, PcValue b)

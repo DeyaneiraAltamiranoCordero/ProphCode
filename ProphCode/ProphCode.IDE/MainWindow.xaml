@@ -107,8 +107,18 @@
                 </MenuItem>
                 <MenuItem Header="Semántica" x:Name="mnuSemantica"/>
                 <MenuItem Header="Tipos de datos">
-                    <MenuItem Header="Simples"    x:Name="mnuTiposSimples"/>
-                    <MenuItem Header="Compuestos" x:Name="mnuTiposCompuestos"/>
+                    <MenuItem Header="Simples" x:Name="mnuTiposSimples">
+                        <MenuItem Header="Constante" Click="InsertProphecy"/>
+                        <MenuItem Header="String" Click="InsertText"/>
+                        <MenuItem Header="Intero" Click="InsertInt"/>
+                        <MenuItem Header="Decimal" Click="InsertDec"/>
+                        <MenuItem Header="Bolean" Click="InsertBool"/>
+                        <MenuItem Header="Char" Click="InsertChar"/>
+                    </MenuItem>
+                    <MenuItem Header="Compuestos" x:Name="mnuTiposCompuestos">
+                        <MenuItem Header="Lista" Click="InsertList"/>
+                        <MenuItem Header="Vector" Click="InsertVec"/>
+                    </MenuItem>
                 </MenuItem>
             </MenuItem>
         </Menu>

@@ -19,7 +19,7 @@ namespace ProphCode.IDE
             {
                 string source = Editor.Text;
 
-                // 1) LEXER
+                //Aquí empieza el analisis lexer
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
@@ -28,7 +28,7 @@ namespace ProphCode.IDE
                 foreach (var t in tokens)
                     sb.AppendLine($"{t.Kind,-20} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
 
-                // 2) PARSER: intentar parsear el programa completo
+                //Después pasa al parser para hacer el arbol y el analsis sintáctico
                 sb.AppendLine();
                 sb.AppendLine("[PARSER] Árbol sintáctico:");
 
@@ -37,7 +37,7 @@ namespace ProphCode.IDE
                     var parser = new Parser(tokens);
                     var prog = parser.ParseProgram();
 
-                    // 3) Imprimir árbol AST completo
+                   //hace el arbol(Lo imprime en realidad)
                     sb.AppendLine(AstPrinter.Print(prog));
                 }
                 catch (Exception exParse)
@@ -46,7 +46,7 @@ namespace ProphCode.IDE
                     sb.AppendLine("[Parse ERROR] " + exParse.Message);
                 }
 
-                // 4) Mostrar todo en la consola del IDE
+                //Muestra en el IDE el resultado
                 Consola.Text = sb.ToString();
                 Consola.ScrollToEnd();
             }
@@ -57,7 +57,6 @@ namespace ProphCode.IDE
             }
         }
 
-        // Utilidad auxiliar para escapar comillas, etc.
         private string Escape(string s)
         {
             if (s == null) return "";
@@ -83,7 +82,7 @@ namespace ProphCode.IDE
 
                 var runner = new ProphCode.Core.Runtime.Interpreter(prog);
 
-                // 1) Capturar salida en la consola del IDE (Consola TextBox)
+                // Captuptura la salida en la consola del IDE
                 var outBuffer = new StringBuilder();
                 runner.WriteLine = (text) =>
                 {
@@ -95,20 +94,16 @@ namespace ProphCode.IDE
                     outBuffer.AppendLine(text);
                 };
 
-                // 2) Input para scry: usa un InputBox sencillo
+                //Maneja las entradas de scry()
                 runner.ReadLine = (prompt) =>
                 {
-                    // Opción A: Microsoft.VisualBasic.InputBox (agrega referencia Microsoft.VisualBasic)
                     return Microsoft.VisualBasic.Interaction.InputBox(
                         string.IsNullOrEmpty(prompt) ? "Ingrese un valor:" : prompt,
                         "scry()", ""
                     );
-
-                    // Opción B (si no quieres Microsoft.VisualBasic):
-                    // Crea tu propia ventana modal InputDialog y devuélvela aquí.
                 };
 
-                // limpia la consola y corre
+                // limpia la consola
                 Consola.Text = "[RUN] Iniciando...\n";
                 runner.Run();
                 Consola.AppendText("[RUN] OK\n");
@@ -120,9 +115,7 @@ namespace ProphCode.IDE
                 Consola.ScrollToEnd();
             }
         }
-
-
-        // === Opcional: handlers del menú (si les pusiste Click en XAML) ===
+        
         private void Nuevo_Click(object sender, RoutedEventArgs e)
         {
             Editor.Clear();
@@ -132,6 +125,61 @@ namespace ProphCode.IDE
         private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
+        }
+         
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void InsertProphecy(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("prophecy int nombreConstante -> 0;");
+        }
+
+        private void InsertText(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("text nombreString -> \"Hola mundo\";");
+        }
+
+        private void InsertInt(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("int nombreEntero -> 42;");
+        }
+
+        private void InsertDec(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("dec nombreDecimal -> 3.14;");
+        }
+
+        private void InsertBool(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("bool nombreBolean -> lumus;");
+        }
+
+        private void InsertChar(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("char nombreLetra -> 'a';");
+        }
+
+        private void InsertList(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("list<int> nombreLista -> [];");
+        }
+
+        private void InsertVec(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("vec<int> nombreVector -> [0, 1, 2];");
+        }
+
+        // Método auxiliar para insertar texto en el editor
+        private void InsertTextInEditor(string text)
+        {
+            int caretIndex = Editor.CaretIndex;
+
+            Editor.Text = Editor.Text.Insert(caretIndex, text);
+            Editor.CaretIndex = caretIndex + text.Length;
+
+            Editor.Focus(); //recibe el texto focus
         }
     }
 }
