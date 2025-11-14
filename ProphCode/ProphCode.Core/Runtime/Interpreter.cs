@@ -22,7 +22,7 @@ namespace ProphCode.Core.Runtime
                 _funcs[f.Name] = f;  // última definición gana (simple)
 
 
-            // defaults (si no se inyectan, usa la consola)
+          
             ReadLine = (prompt) =>
             {
                 if (!string.IsNullOrEmpty(prompt)) Console.Write(prompt);
@@ -36,12 +36,11 @@ namespace ProphCode.Core.Runtime
         {
             var global = new Env();
 
-            // Ejecutar sentencias top-level (incluye lo que volcaste desde abracadabra)
             foreach (var s in _prog.Body)
                 ExecStmt(s, global);
         }
 
-        // ===== Sentencias =====
+        //  Sentencias 
         private void ExecStmt(Stmt s, Env env)
         {
             switch (s)

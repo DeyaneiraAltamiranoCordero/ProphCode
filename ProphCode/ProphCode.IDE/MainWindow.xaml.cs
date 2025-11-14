@@ -1,6 +1,7 @@
 using ProphCode.Core.AST;
 using ProphCode.Core.Lexing;
 using ProphCode.Core.Parsing;
+using ProphCode.Core.Semantic;
 using System.Text;
 using System.Windows;
 
@@ -19,44 +20,34 @@ namespace ProphCode.IDE
             {
                 string source = Editor.Text;
 
-                //Aquí empieza el analisis lexer
+                // Análisis léxico
                 var lexer = new Lexer();
                 var tokens = lexer.Tokenize(source);
 
-                var sb = new StringBuilder();
-                sb.AppendLine("[LEX] Tokens:");
-                foreach (var t in tokens)
-                    sb.AppendLine($"{t.Kind,-20} \"{Escape(t.Lexeme)}\"  @ {t.Line}:{t.Col}");
+                // Análisis sintáctico
+                var parser = new Parser(tokens);
+                var program = parser.ParseProgram();
 
-                //Después pasa al parser para hacer el arbol y el analsis sintáctico
-                sb.AppendLine();
-                sb.AppendLine("[PARSER] Árbol sintáctico:");
-
+                // Análisis semántico
                 try
                 {
-                    var parser = new Parser(tokens);
-                    var prog = parser.ParseProgram();
-
-                   //hace el arbol(Lo imprime en realidad)
-                    sb.AppendLine(AstPrinter.Print(prog));
+                    var semanticAnalyzer = new SemanticAnalyzer();
+                    semanticAnalyzer.Analyze(program);
                 }
-                catch (Exception exParse)
+                catch (Exception semEx)
                 {
-                    sb.AppendLine();
-                    sb.AppendLine("[Parse ERROR] " + exParse.Message);
+                    Consola.Text = $"[SEMANTIC ERROR] {semEx.Message}";
+                    return;
                 }
 
-                //Muestra en el IDE el resultado
-                Consola.Text = sb.ToString();
-                Consola.ScrollToEnd();
+                // Si todo está bien, continuar con la ejecución o generación de código
+                Consola.Text = "[COMPILACIÓN EXITOSA]";
             }
             catch (Exception ex)
             {
-                Consola.Text = "[LEX ERROR] " + ex.Message;
-                Consola.ScrollToEnd();
+                Consola.Text = $"[ERROR] {ex.Message}";
             }
         }
-
         private string Escape(string s)
         {
             if (s == null) return "";

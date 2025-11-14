@@ -192,9 +192,6 @@
                                    FontWeight="SemiBold" Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
                                    VerticalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                            <Button x:Name="BtnCompilar" Content="COMPILAR"
-                                    Style="{StaticResource AccentButton}"
-                                    Click="BtnCompilar_Click"/>
                             <Button x:Name="BtnEjecutar" Content="EJECUTAR"
                                     Style="{StaticResource AccentButton}"
                                     Click="BtnEjecutar_Click"/>

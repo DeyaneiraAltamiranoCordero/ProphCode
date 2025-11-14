@@ -18,8 +18,6 @@ namespace ProphCode.Core.AST
         public List<Stmt> Body { get; } = new List<Stmt>();
     }
 
-    // =========================
-    //       DECLARACIONES
    
     public sealed class FunctionDecl : Node
     {
@@ -36,13 +34,12 @@ namespace ProphCode.Core.AST
     }
 
     
-    //        SENTENCIAS
-    
+
     public abstract class Stmt : Node { }
 
     public sealed class VarDeclStmt : Stmt
     {
-        public bool IsConst { get; set; }        // 'prophecy'
+        public bool IsConst { get; set; }       
         public string TypeName { get; set; }     // "int","dec","text","bool","list","vec","char"
         public string Name { get; set; }
         public Expr Init { get; set; }           
@@ -56,7 +53,6 @@ namespace ProphCode.Core.AST
         public Expr Value { get; set; }
     }
 
-    // Sentencia de retorno
     public sealed class ReturnStmt : Stmt
     {
         public Expr Value { get; set; }          
@@ -132,7 +128,6 @@ namespace ProphCode.Core.AST
  
     public abstract class Expr : Node { }
 
-    // Literales
     public sealed class IntLitExpr : Expr { public int Value { get; set; } }
     public sealed class DecLitExpr : Expr { public double Value { get; set; } }
     public sealed class TextLitExpr : Expr { public string Value { get; set; } }
@@ -153,7 +148,7 @@ namespace ProphCode.Core.AST
         public Expr Right { get; set; }
     }
 
-    // Binaria: a + b, a beyone b, a and b, etc.
+    // Operación: a + b, a beyone b, a and b, etc.
     public sealed class BinaryExpr : Expr
     {
    
@@ -162,7 +157,6 @@ namespace ProphCode.Core.AST
         public Expr Right { get; set; }
     }
 
-    // Llamada:  foo(a, b, c)
     public sealed class CallExpr : Expr
     {
         public string FuncName { get; set; }
