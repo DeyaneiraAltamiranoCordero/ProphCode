@@ -11,13 +11,11 @@ namespace ProphCode.Core.AST
             return sb.ToString();
         }
 
-        // ================== Internals ==================
-
         private static void PrintProgram(ProgramNode p, StringBuilder sb, int ind)
         {
             Ind(sb, ind).AppendLine("Program");
 
-            // Funciones top-level (si existen)
+            // Funciones top-level(si si)
             if (p.Functions is not null && p.Functions.Count > 0)
             {
                 Ind(sb, ind + 1).AppendLine("Functions");
@@ -25,7 +23,7 @@ namespace ProphCode.Core.AST
                     PrintFunction(f, sb, ind + 2);
             }
 
-            // Sentencias top-level (scripts)
+            // Sentencias top-level(si no)
             if (p.Body is not null && p.Body.Count > 0)
             {
                 Ind(sb, ind + 1).AppendLine("TopLevel");
@@ -52,12 +50,10 @@ namespace ProphCode.Core.AST
         {
             switch (s)
             {
-                // ----- Bloque -----
                 case BlockStmt b:
                     PrintBlock(b, sb, ind);
                     break;
 
-                // ----- Declaración -----
                 case VarDeclStmt v:
                     {
                         var line = new StringBuilder();
@@ -69,7 +65,6 @@ namespace ProphCode.Core.AST
                         break;
                     }
 
-                // ----- Asignación (l-value general) -----
                 case AssignStmt a:
                     Ind(sb, ind)
                         .Append("Assign ")
@@ -78,7 +73,7 @@ namespace ProphCode.Core.AST
                         .AppendLine(PrintExprInline(a.Value));
                     break;
 
-                // ----- Return -----
+                // return
                 case ReturnStmt r:
                     Ind(sb, ind).Append("Return");
                     if (r.Value != null)
@@ -86,12 +81,12 @@ namespace ProphCode.Core.AST
                     sb.AppendLine();
                     break;
 
-                // ----- Break -----
+                // breack de switch
                 case BreakStmt:
                     Ind(sb, ind).AppendLine("Break");
                     break;
 
-                // ----- If / Elif / Else -----
+                // condicional if
                 case IfStmt iff:
                     Ind(sb, ind).Append("If cond: ").AppendLine(PrintExprInline(iff.Cond));
                     PrintBlock(iff.Then, sb, ind + 1);
@@ -107,20 +102,20 @@ namespace ProphCode.Core.AST
                     }
                     break;
 
-                // ----- While -----
+                //  While 
                 case WhileStmt w:
                     Ind(sb, ind).Append("While cond: ").AppendLine(PrintExprInline(w.Cond));
                     PrintBlock(w.Body, sb, ind + 1);
                     break;
 
-                // ----- Do-While -----
+                //  Do-While 
                 case DoWhileStmt dw:
                     Ind(sb, ind).AppendLine("Do");
                     PrintBlock(dw.Body, sb, ind + 1);
                     Ind(sb, ind).Append("While cond: ").AppendLine(PrintExprInline(dw.Cond));
                     break;
 
-                // ----- For ancestral -----
+                // For 
                 case ForAncestralStmt fa:
                     Ind(sb, ind).AppendLine("ForAncestral");
                     Ind(sb, ind + 1).Append("Init: ");
@@ -132,7 +127,7 @@ namespace ProphCode.Core.AST
                     PrintBlock(fa.Body, sb, ind + 1);
                     break;
 
-                // ----- Switch -----
+                //  Switch
                 case SwitchStmt sw:
                     Ind(sb, ind).Append("Switch expr: ").AppendLine(PrintExprInline(sw.Expr));
                     foreach (var c in sw.Cases)
@@ -146,13 +141,10 @@ namespace ProphCode.Core.AST
                         PrintBlock(sw.Default, sb, ind + 2);
                     }
                     break;
-
-                // ----- ExprStmt (incluye reveal(...) si es builtin) -----
+                    //Otro caso
                 case ExprStmt es:
                     Ind(sb, ind).Append("Expr ").AppendLine(PrintExprInline(es.Expr));
-                    break;
-
-                
+                    break;        
 
                 default:
                     Ind(sb, ind).AppendLine("<Stmt?>");
@@ -198,7 +190,6 @@ namespace ProphCode.Core.AST
             }
         }
 
-        // ================== Expresiones ==================
 
         public static string PrintExpr(Expr e) => PrintExprInline(e);
 
@@ -242,7 +233,7 @@ namespace ProphCode.Core.AST
             }
         }
 
-        // Imprime el l-value (variable o indexación encadenada)
+        // Imprime el valor 
         private static string PrintLValueInline(Expr target)
         {
             return target switch
@@ -253,7 +244,6 @@ namespace ProphCode.Core.AST
             };
         }
 
-        // ================== Utils ==================
 
         private static string Escape(string s)
         {
@@ -278,7 +268,6 @@ namespace ProphCode.Core.AST
                 _ => ch.ToString()
             };
         }
-
         private static StringBuilder Ind(StringBuilder sb, int ind)
             => sb.Append(' ', ind * 2);
     }

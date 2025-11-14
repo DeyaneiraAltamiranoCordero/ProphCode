@@ -6,7 +6,6 @@ using ProphCode.Core.AST;
 
 namespace ProphCode.Core.Parsing
 {
-    // Parser de EXPRESIONES con llamadas e indexación (postfijos)
     public sealed class ExprParser
     {
         private readonly IList<Token> _toks;
@@ -19,8 +18,7 @@ namespace ProphCode.Core.Parsing
             _toks = tokens ?? throw new ArgumentNullException(nameof(tokens));
             _pos = 0;
         }
-
-        // NUEVO: ctor con posición inicial
+        //Aqui empieza
         public ExprParser(IList<Token> tokens, int startPos)
         {
             _toks = tokens ?? throw new ArgumentNullException(nameof(tokens));
@@ -41,21 +39,20 @@ namespace ProphCode.Core.Parsing
 
             while (true)
             {
-                // Primero, maneja postfijos (llamada e indexación) con mayor precedencia que cualquier binario
+                // Primero, maneja postfijos
                 var post = ParseOptionalPostfix(left);
                 if (!ReferenceEquals(post, left))
                 {
                     left = post;
-                    continue; // volver a intentar más postfijos (encadenados)
+                    continue; 
                 }
 
                 // Luego, operadores binarios por precedencia
                 if (!TryGetBinaryOperator(out string opLexeme, out int prec) || prec < minPrec)
                     break;
 
-                Advance(); // consumir operador
+                Advance(); 
 
-                // asociatividad izquierda
                 int nextMinPrec = prec + 1;
                 var right = ParseExpression(nextMinPrec);
 
@@ -77,13 +74,12 @@ namespace ProphCode.Core.Parsing
                 var right = ParseUnary();
                 return new UnaryExpr { Op = "-", Right = right };
             }
-            // (opcional) unario '+'
-            // if (Match(TokenKind.Plus)) return ParseUnary();
+
 
             return ParsePrimaryWithPostfix(); // Primary + posibles postfijos inmediatos
         }
 
-        // Primary + bucle de postfijos (para soportar f(...), a[i], a[i][j], f(...)(...) si algún día)
+        // Primary + bucle de postfijos
         private Expr ParsePrimaryWithPostfix()
         {
             var expr = ParsePrimaryAtom();
@@ -112,7 +108,7 @@ namespace ProphCode.Core.Parsing
                     if (expr is VarExpr v)
                     {
                         var call = new CallExpr { FuncName = v.Name };
-                        call.Args.AddRange(args);        // <- clave
+                        call.Args.AddRange(args);        // <- importante
                         expr = call;
                     }
                     else
@@ -123,9 +119,8 @@ namespace ProphCode.Core.Parsing
                 }
 
 
-                if (Match(TokenKind.LBracket))
+                if (Match(TokenKind.LBracket)) //para indexar
                 {
-                    // indexación: a[expr]
                     var idx = ParseExpression(0);
                     Expect(TokenKind.RBracket, "Se esperaba ']' para cerrar el índice.");
                     expr = new IndexExpr { Target = expr, Index = idx };
@@ -168,7 +163,7 @@ namespace ProphCode.Core.Parsing
                     Advance();
                     return new NullLitExpr();
 
-                // Identificadores Y ciertos keywords que actúan como nombres de función (reveal, scry, invoke)
+                // Identificadores Y ciertos claves de nombres de funciones 
                 case TokenKind.Ident:
                 case TokenKind.KwReveal:
                 case TokenKind.KwScry:
@@ -179,18 +174,18 @@ namespace ProphCode.Core.Parsing
                     }
 
                 case TokenKind.LParen:
-                    Advance(); // (
+                    Advance(); 
                     var inner = ParseExpression(0);
                     Expect(TokenKind.RParen, "Se esperaba ')' para cerrar la expresión entre paréntesis.");
                     return inner;
 
                 default:
                     Throw($"Se esperaba una expresión, pero llegó '{t.Kind}' (lexema '{t.Lexeme}').");
-                    return null!; // unreachable
+                    return null!; 
             }
         }
 
-        // ------------ Operadores binarios y precedencias ------------
+        //operaciones binarias
         private bool TryGetBinaryOperator(out string opLexeme, out int prec)
         {
             var t = Current;
@@ -230,8 +225,6 @@ namespace ProphCode.Core.Parsing
                     prec = -1; return false;
             }
         }
-
-        // ------------ utilidades de recorrido ------------
         private Token Current => _toks[_pos];
 
         private Token Advance()

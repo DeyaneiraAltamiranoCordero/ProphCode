@@ -41,7 +41,7 @@ namespace ProphCode.Core.Runtime
                 ExecStmt(s, global);
         }
 
-        // ===== Sentencias =====
+        //  Sentencias 
         private void ExecStmt(Stmt s, Env env)
         {
             switch (s)
@@ -60,7 +60,7 @@ namespace ProphCode.Core.Runtime
                     }
                 case AssignStmt a:
                     {
-                        // MVP: asignación a variable (no índices aún)
+                        // MVP asignación a variable (no índices aún)
                         if (a.Target is VarExpr ve)
                         {
                             var val = EvalExpr(a.Value, env);
@@ -293,7 +293,7 @@ namespace ProphCode.Core.Runtime
         }
 
 
-        //  Builtins MVP 
+        //  Construimos MVP 
         private PcValue CallBuiltin(CallExpr c, Env env)
         {
             if (string.Equals(c.FuncName, "reveal", StringComparison.Ordinal))

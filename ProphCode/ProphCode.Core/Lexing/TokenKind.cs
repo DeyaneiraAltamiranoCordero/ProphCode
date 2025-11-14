@@ -8,7 +8,6 @@ namespace ProphCode.Core.Lexing
 {
     public enum TokenKind
     {
-        // ---- Literales e Identificadores
         Ident,            // nombres de variables/funciones
         IntLit,           // 123
         DecLit,           // 12.34
@@ -17,7 +16,6 @@ namespace ProphCode.Core.Lexing
         BoolLit,          // lumus / nox (true/false)
         NullLit,          // null
 
-        // ---- Palabras reservadas (Kw*)
 
         // Funciones / flujo principal
         KwSpell, KwEndSpell, KwAbracadabra, KwDisappear, KwReturn, KwSilence, KwInvoke,
@@ -28,26 +26,25 @@ namespace ProphCode.Core.Lexing
         KwDestinyChoose, KwPath, KwHiddenPath, KwBreak,
         KwAncestralLoop, KwEternalLoop, KwEternalLoopOnce,
         
-        // E/S y lógica 
+        // Secuencias lógica 
         KwReveal, KwAnd, KwOr, KwAnti,
 
-        // Tipos / calificador
+        // Tipos
         KwProphecy, KwText, KwInt, KwDec, KwBool, KwList, KwVec, KwChar,
 
         KwScry,   // función de entrada 
-        KwStr, KwEnd, KwIgm, // para el for ancestral_loop: str/end/igm
+        KwStr, KwEnd, KwIgm, // para el for ancestral_loop
 
-        // ---- Operadores
+        //  Operadores
         Plus, Minus, Star, Slash, Percent, // + - * / %
         EqEq, BangEq,                      // == !=
         Beyone, BeyoneEq, Under, UnderEq,  // 
-        Arrow,                             // -> (asignación)
+        Arrow,                             // -> 
 
-        // ---- Puntuación / delimitadores
+        //  Puntuación / delimitadores
         LParen, RParen, LBrace, RBrace, LBracket, RBracket,
         Semi, Comma, Colon,
 
-        // ---- Especial
         Eof
     }
 }
