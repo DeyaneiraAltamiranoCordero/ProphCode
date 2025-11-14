@@ -171,7 +171,52 @@ namespace ProphCode.IDE
             InsertTextInEditor("vec<int> nombreVector -> [0, 1, 2];");
         }
 
-        // Método auxiliar para insertar texto en el editor
+        private void InsertGreaterThan(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("variableDeclada -> a beyone b;");
+        }
+
+        private void InsertGreaterThanOrEqual(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a beyoneq b;");
+        }
+
+        private void InsertLessThan(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a under b;");
+        }
+
+        private void InsertLessThanOrEqual(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a undereq b;");
+        }
+
+        private void InsertAddition(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoSuma -> a + b;");
+        }
+
+        private void InsertSubtraction(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoResta -> a - b;");
+        }
+
+        private void InsertMultiplication(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoMulti -> a * b;");
+        }
+
+        private void InsertDivision(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoDiv -> a / b;");
+        }
+
+        private void InsertModulo(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultadoMod -> a % b;");
+        }
+
+        //Insertar en el editor de texto en la posición del cursor
         private void InsertTextInEditor(string text)
         {
             int caretIndex = Editor.CaretIndex;

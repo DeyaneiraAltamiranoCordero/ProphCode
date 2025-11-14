@@ -103,7 +103,21 @@
                 <MenuItem Header="Sintaxis">
                     <MenuItem Header="Control"     x:Name="mnuSintaxisControl"/>    
                     <MenuItem Header="Funciones"   x:Name="mnuSintaxisFunciones"/>
-                    <MenuItem Header="Operaciones" x:Name="mnuSintaxisOperaciones"/>
+                    <MenuItem Header="Operaciones" x:Name="mnuSintaxisOperaciones">
+                        <MenuItem Header="Aritméticos">
+                            <MenuItem Header="Suma" Click="InsertAddition"/>
+                            <MenuItem Header="Resta" Click="InsertSubtraction"/>
+                            <MenuItem Header="Multiplicación" Click="InsertMultiplication"/>
+                            <MenuItem Header="División" Click="InsertDivision"/>
+                            <MenuItem Header="Módulo" Click="InsertModulo"/>
+                        </MenuItem>
+                        <MenuItem Header="Comparadores">
+                            <MenuItem Header="Mayor" Click="InsertGreaterThan"/>
+                            <MenuItem Header="Mayor o Igual" Click="InsertGreaterThanOrEqual"/>
+                            <MenuItem Header="Menor" Click="InsertLessThan"/>
+                            <MenuItem Header="Menor o Igual" Click="InsertLessThanOrEqual"/>
+                        </MenuItem>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Semántica" x:Name="mnuSemantica"/>
                 <MenuItem Header="Tipos de datos">
