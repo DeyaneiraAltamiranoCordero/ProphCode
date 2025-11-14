@@ -39,14 +39,13 @@ namespace ProphCode.Core.Parsing
                     continue;
                 }
 
-                // 2) Bloque principal con llaves: abracadabra { ... } disappear
+                // 2) Bloque principal
                 if (Match(TokenKind.KwAbracadabra))
                 {
-                    ParseMainBlockInto(prog); // vuelca sentencias al Body
+                    ParseMainBlockInto(prog); 
                     continue;
                 }
 
-                // 3) Sentencias top-level normales
                 prog.Body.Add(ParseStatement());
             }
 
@@ -90,13 +89,12 @@ namespace ProphCode.Core.Parsing
         }
         private void ParseMainBlockInto(ProgramNode prog)
         {
-            // Requerimos: abracadabra { ... } disappear
             Expect(TokenKind.LBrace, "Se esperaba '{' después de 'abracadabra'.");
             var block = ParseBlockAfterLBrace(); // ya tienes este método
 
             Expect(TokenKind.KwDisappear, "Se esperaba 'disappear' para cerrar el bloque principal.");
 
-            // volcamos el contenido del bloque principal en el Body del programa
+            // contenido principal
             prog.Body.AddRange(block.Statements);
         }
 
@@ -104,7 +102,7 @@ namespace ProphCode.Core.Parsing
         {
             if (Match(TokenKind.LBrace)) return ParseBlockAfterLBrace();
 
-            // if / while / do-while / return / break
+            // Estructuras de control()
             if (Match(TokenKind.KwIfSpellSay)) return ParseIf();
             if (Match(TokenKind.KwEternalLoop)) return ParseWhile();
             if (Match(TokenKind.KwEternalLoopOnce)) return ParseDoWhile();
@@ -272,7 +270,7 @@ namespace ProphCode.Core.Parsing
             // str init;
             Expect(TokenKind.KwStr, "Se esperaba 'str' en ancestral_loop.");
             // init puede ser VarDeclStmt o AssignStmt o ExprStmt (aceptamos asignación)
-            // Reutilizamos ParseVarDecl si empieza por 'prophecy' o tipo; si no, lo tratamos como asignación/expr.
+            // Reutilizamos ParseVarDecl si empieza por 'prophecy' o tipo, si no, lo tratamos como asignación/expr.
             Stmt init;
             if (Check(TokenKind.KwProphecy) || IsTypeAhead())
             {

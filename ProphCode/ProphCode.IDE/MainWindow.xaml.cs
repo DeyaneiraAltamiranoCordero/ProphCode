@@ -1,6 +1,7 @@
 using ProphCode.Core.AST;
 using ProphCode.Core.Lexing;
 using ProphCode.Core.Parsing;
+using ProphCode.Core.Runtime;
 using System.Text;
 using System.Windows;
 
@@ -303,48 +304,57 @@ namespace ProphCode.IDE
         private void InsertWhileStructure(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor(
-                "eternal_loop (condición) {\n" +
-                "    ~Bloque que se ejecuta mientras la condición sea verdadera~\n" +
-                "}"
+                "int i-> 0;\n\n" +
+                "eternal_loop(i under 5) {\n" +
+                "    reveal(\"Iteración \", i);\n" +
+                "    i->i + 1;\n" +
+                "}\n"
             );
         }
+
 
         private void InsertDoWhileStructure(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor(
+                "int j-> 0;\n\n" +
                 "eternal_loop_once {\n" +
-                "    ~Bloque que se ejecuta al menos una vez~\n" +
-                "} (condición);"
+                "    reveal(\"j=\", j);\n" +
+                "    j->j + 1;\n" +
+                "} (j under 3);\n"
             );
         }
+
 
         private void InsertForStructure(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor(
-                "ancestral_loop (str int i -> 0; end i under 10; igm i -> i + 1) {\n" +
-                "    ~Bloque que se ejecuta para cada iteración~\n" +
-                "}"
+                "ancestral_loop(str int i-> 0; end i under 3; igm i -> i + 1) {\n" +
+                "    reveal(\"Iteración \", i);\n" +
+                "}\n"
             );
         }
+
 
         private void InsertSwitchStructure(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor(
-                "destiny_choose (expresión) {\n" +
-                "    path valor1: {\n" +
-                "        ~Bloque si la expresión coincide con valor1~\n" +
+                "int i -> 1;{\n" + 
+                "destiny_choose (i) {\n" +
+                "    path 0: {\n" +
+                "        reveal(\"Cero\");\n" +
                 "        break;\n" +
                 "    }\n" +
-                "    path valor2: {\n" +
-                "        ~Bloque si la expresión coincide con valor2~\n" +
+                "    path 1: {\n" +
+                "        reveal(\"Uno\");\n" +
                 "        break;\n" +
                 "    }\n" +
                 "    hidden_path: {\n" +
-                "        ~Bloque por defecto si no coincide con ningún valor~\n" +
+                "        reveal(\"Otro valor\");\n" +
                 "    }\n" +
                 "}"
             );
         }
+
         //Insertar en el editor de texto en la posición del cursor
         private void InsertTextInEditor(string text)
         {
