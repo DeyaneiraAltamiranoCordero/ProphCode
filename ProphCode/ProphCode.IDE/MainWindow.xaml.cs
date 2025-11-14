@@ -131,6 +131,7 @@ namespace ProphCode.IDE
         {
 
         }
+        //Tipos de datos
         private void InsertProphecy(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor("prophecy int nombreConstante -> 0;");
@@ -171,6 +172,7 @@ namespace ProphCode.IDE
             InsertTextInEditor("vec<int> nombreVector -> [0, 1, 2];");
         }
 
+        //Operadores
         private void InsertGreaterThan(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor("variableDeclada -> a beyone b;");
@@ -214,6 +216,75 @@ namespace ProphCode.IDE
         private void InsertModulo(object sender, RoutedEventArgs e)
         {
             InsertTextInEditor("resultadoMod -> a % b;");
+        }
+        //
+        //Palabras reservadas literales
+        private void InsertLiteralTrue(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("lumus;  ~Representa true~");
+        }
+
+        private void InsertLiteralFalse(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("nox;  ~Representa false~");
+        }
+
+        private void InsertLiteralNull(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("null;  ~Representa un valor nulo~");
+        }
+
+        //Operadores Lógicas
+        private void InsertReveal(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("reveal(\"Hola mundo\");  ~Muestra un mensaje en consola~");
+        }
+
+        private void InsertAnd(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a and b;  ~Operador lógico AND~");
+        }
+
+        private void InsertOr(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> a or b;  ~Operador lógico OR~");
+        }
+
+        private void InsertAnti(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("resultado -> anti a;  ~Operador lógico NOT~");
+        }
+        //Funciones
+        private void InsertFunctionStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "spell <tipo> nombreFuncion(<tipoParametro> <nombreVariable>) ->{\n" +
+
+                "    <tipo> variable -> <asignacion>;\n" +
+                "    return variable;\n" +
+
+                "}endSpell"
+            );
+        }
+        private void InsertMainFunctionStructure(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "abracadabra {\n" +
+                "    ~Bloque principal del programa~\n" +
+                "} disappear"
+            );
+        }
+        private void InsertFunctionWithoutReturn(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor(
+                "spell silence nombreFuncion(<tipoParametro> <nombreVariable>) -> {\n" +
+                "    ~Cuerpo de la función sin retorno~\n" +
+                "} endSpell"
+            );
+        }
+        private void InsertInvokeFunction(object sender, RoutedEventArgs e)
+        {
+            InsertTextInEditor("invoke nombreFuncion();  ~Invoca una función~");
         }
 
         //Insertar en el editor de texto en la posición del cursor

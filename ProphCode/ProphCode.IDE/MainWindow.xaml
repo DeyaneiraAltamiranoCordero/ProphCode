@@ -100,9 +100,14 @@
             </MenuItem>
             <MenuItem Header="_Opciones" Foreground="#FFD9D9D9" BorderBrush="#FF212233">
                 <MenuItem Header="Palabras reservadas" x:Name="mnuPalabras"/>
+
                 <MenuItem Header="Sintaxis">
-                    <MenuItem Header="Control"     x:Name="mnuSintaxisControl"/>    
-                    <MenuItem Header="Funciones"   x:Name="mnuSintaxisFunciones"/>
+                    <MenuItem Header="Control"     x:Name="mnuSintaxisControl"/>
+                    <MenuItem Header="Funciones" x:Name="mnuSintaxisFunciones">
+                        <MenuItem Header="Definir función" Click="InsertFunctionStructure"/>
+                        <MenuItem Header="Función principal" Click="InsertMainFunctionStructure"/>
+                        <MenuItem Header="Función sin retorno" Click="InsertFunctionWithoutReturn"/>
+                    </MenuItem>
                     <MenuItem Header="Operaciones" x:Name="mnuSintaxisOperaciones">
                         <MenuItem Header="Aritméticos">
                             <MenuItem Header="Suma" Click="InsertAddition"/>
@@ -119,7 +124,6 @@
                         </MenuItem>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Semántica" x:Name="mnuSemantica"/>
                 <MenuItem Header="Tipos de datos">
                     <MenuItem Header="Simples" x:Name="mnuTiposSimples">
                         <MenuItem Header="Constante" Click="InsertProphecy"/>
@@ -133,6 +137,17 @@
                         <MenuItem Header="Lista" Click="InsertList"/>
                         <MenuItem Header="Vector" Click="InsertVec"/>
                     </MenuItem>
+                </MenuItem>
+                <MenuItem Header="E/S y Lógicas">
+                    <MenuItem Header="Mostrar" Click="InsertReveal"/>
+                    <MenuItem Header="Y lógico" Click="InsertAnd"/>
+                    <MenuItem Header="O lógico" Click="InsertOr"/>
+                    <MenuItem Header="No lógico" Click="InsertAnti"/>
+                </MenuItem>
+                <MenuItem Header="Literales">
+                    <MenuItem Header="True" Click="InsertLiteralTrue"/>
+                    <MenuItem Header="False" Click="InsertLiteralFalse"/>
+                    <MenuItem Header="Null" Click="InsertLiteralNull"/>
                 </MenuItem>
             </MenuItem>
         </Menu>
