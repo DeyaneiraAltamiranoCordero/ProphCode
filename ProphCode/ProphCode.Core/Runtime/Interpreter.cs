@@ -22,7 +22,7 @@ namespace ProphCode.Core.Runtime
                 _funcs[f.Name] = f;  // última definición gana (simple)
 
 
-            // defaults (si no se inyectan, usa la consola)
+          
             ReadLine = (prompt) =>
             {
                 if (!string.IsNullOrEmpty(prompt)) Console.Write(prompt);
@@ -36,7 +36,6 @@ namespace ProphCode.Core.Runtime
         {
             var global = new Env();
 
-            // Ejecutar sentencias top-level (incluye lo que volcaste desde abracadabra)
             foreach (var s in _prog.Body)
                 ExecStmt(s, global);
         }
@@ -46,6 +45,7 @@ namespace ProphCode.Core.Runtime
         {
             switch (s)
             {
+
                 case BlockStmt b:
                     {
                         var inner = new Env(env);
@@ -54,22 +54,59 @@ namespace ProphCode.Core.Runtime
                     }
                 case VarDeclStmt v:
                     {
-                        var init = v.Init != null ? EvalExpr(v.Init, env) : PcValue.Null();
+                        PcValue init;
+
+                        if (v.Init != null)
+                        {
+                            // Si el usuario dio inicializador, se evalúa normalmente
+                            init = EvalExpr(v.Init, env);
+                        }
+                        else
+                        {
+                            // Si NO hay inicializador y el tipo es list o vec, crear colección vacía
+                            if (string.Equals(v.TypeName, "list", StringComparison.Ordinal))
+                            {
+                                init = PcValue.List(new List<PcValue>());
+                            }
+                            else if (string.Equals(v.TypeName, "vec", StringComparison.Ordinal))
+                            {
+                                init = PcValue.Vec(new List<PcValue>());
+                            }
+                            else
+                            {
+                                // otros tipos: null por defecto
+                                init = PcValue.Null();
+                            }
+                        }
+
                         env.Declare(v.Name, init, v.IsConst);
                         break;
                     }
+
                 case AssignStmt a:
                     {
-                        // MVP asignación a variable (no índices aún)
+                        // Asignación a a[i]
+                        if (a.Target is IndexExpr idxExpr)
+                        {
+                            var collection = EvalExpr(idxExpr.Target, env);
+                            var index = EvalExpr(idxExpr.Index, env);
+                            var value = EvalExpr(a.Value, env);
+                            IndexAssign(collection, index, value);
+                            break;
+                        }
+
+                        // Asignación normal a variable
                         if (a.Target is VarExpr ve)
                         {
                             var val = EvalExpr(a.Value, env);
                             env.Assign(ve.Name, val);
+                            break;
                         }
-                        else
-                            throw new Exception("[Runtime] MVP: asignación sólo a variables (no índices).");
-                        break;
+
+                        throw new Exception("[Runtime] Este tipo de asignación aún no está soportado.");
                     }
+
+
                 case IfStmt iff:
                     {
                         if (AsBool(EvalExpr(iff.Cond, env))) ExecStmt(iff.Then, env);
@@ -177,7 +214,7 @@ namespace ProphCode.Core.Runtime
             }
         }
 
-        //  Expresiones 
+       
         private PcValue EvalExpr(Expr e, Env env)
         {
             switch (e)
@@ -237,9 +274,100 @@ namespace ProphCode.Core.Runtime
                     return CallFunction(call, env);
 
 
+
+                case IndexExpr idx:
+                    {
+                        var collection = EvalExpr(idx.Target, env);
+                        var index = EvalExpr(idx.Index, env);
+                        return EvalIndexExpr(collection, index);
+                    }
+
+
                 default:
                     throw new Exception("[Runtime] Expresión no soportada en el MVP.");
             }
+        }
+        private PcValue EvalIndexExpr(PcValue collection, PcValue index)
+        {
+            if (index.Kind != PcValue.K.Int)
+                throw new Exception("[Runtime] El índice debe ser un int.");
+
+            int i = index.AsInt;
+
+            if (collection.Kind == PcValue.K.List)
+            {
+                var list = collection.AsList;
+                if (i < 0 || i >= list.Count)
+                    throw new Exception("[Runtime] Índice fuera de rango en list.");
+                return list[i];
+            }
+            if (collection.Kind == PcValue.K.Vec)
+            {
+                var vec = collection.AsVec;
+                if (i < 0 || i >= vec.Count)
+                    throw new Exception("[Runtime] Índice fuera de rango en vec.");
+                return vec[i];
+            }
+
+            throw new Exception("[Runtime] Solo se puede indexar list o vec.");
+        }
+
+
+        private PcValue IndexAssignment(PcValue collection, PcValue index, PcValue value)
+        {
+            if (collection.Kind == PcValue.K.List)
+            {
+                var list = collection.AsList;
+                int idx = index.AsInt;
+                if (idx < 0 || idx >= list.Count)
+                    throw new Exception("[Runtime] Índice fuera de rango en la lista.");
+                list[idx] = value;
+                return PcValue.Null();
+            }
+
+            if (collection.Kind == PcValue.K.Vec)
+            {
+                var vec = collection.AsVec;
+                int idx = index.AsInt;
+                if (idx < 0 || idx >= vec.Count)
+                    throw new Exception("[Runtime] Índice fuera de rango en el vector.");
+                vec[idx] = value;
+                return PcValue.Null();
+            }
+
+            throw new Exception("[Runtime] Solo se puede indexar listas y vectores.");
+        }
+
+        private void IndexAssign(PcValue collection, PcValue index, PcValue value)
+        {
+            if (index.Kind != PcValue.K.Int)
+                throw new Exception("[Runtime] El índice debe ser int.");
+
+            int i = index.AsInt;
+
+            if (collection.Kind == PcValue.K.List)
+            {
+                var list = collection.AsList;
+              
+                while (i >= list.Count)
+                    list.Add(PcValue.Null());
+
+                list[i] = value;
+                return;
+            }
+
+            if (collection.Kind == PcValue.K.Vec)
+            {
+                var vec = collection.AsVec;
+
+                while (i >= vec.Count)
+                    vec.Add(PcValue.Null());
+
+                vec[i] = value;
+                return;
+            }
+
+            throw new Exception("[Runtime] Solo se puede indexar list o vec.");
         }
 
 
@@ -293,7 +421,7 @@ namespace ProphCode.Core.Runtime
         }
 
 
-        //  Construimos MVP 
+       
         private PcValue CallBuiltin(CallExpr c, Env env)
         {
             if (string.Equals(c.FuncName, "reveal", StringComparison.Ordinal))
@@ -318,7 +446,7 @@ namespace ProphCode.Core.Runtime
             throw new Exception($"[Runtime] Función '{c.FuncName}' no soportada aún en el MVP.");
         }
 
-        //  helpers numéricos/comparación/booleanos 
+       
         private static bool IsNumber(PcValue v) => v.Kind == PcValue.K.Int || v.Kind == PcValue.K.Dec;
 
         private static PcValue Add(PcValue a, PcValue b)

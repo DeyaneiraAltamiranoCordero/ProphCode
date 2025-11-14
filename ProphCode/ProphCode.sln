@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36212.18 d17.14
+VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphCode.Core", "ProphCode.Core\ProphCode.Core.csproj", "{FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88}"
 EndProject
@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphCode.IDE", "ProphCode.
 	ProjectSection(ProjectDependencies) = postProject
 		{FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88} = {FFEB11BA-BF1C-4901-8CB3-7FE10E7FDC88}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
